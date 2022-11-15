@@ -137,6 +137,7 @@ const VerifiedUser = async (req, res) => {
         {
           token: "",
           verified: true,
+          voteCode: generateToken,
         },
         { new: true }
       );
@@ -162,7 +163,6 @@ const VerifiedUserFinally = async (req, res) => {
   try {
     const { response } = req.body;
 
-    const generateToken = crypto.randomBytes(2).toString("hex");
     const getUser = await userModel.findById(req.params.id);
 
     if (response === "Yes") {
@@ -172,7 +172,6 @@ const VerifiedUserFinally = async (req, res) => {
           {
             token: "",
             verified: true,
-            voteCode: generateToken,
           },
           { new: true }
         );
@@ -191,10 +190,18 @@ const VerifiedUserFinally = async (req, res) => {
 
     if (response === "No") {
       if (getUser) {
+        const findUser = await userModel.findById(req.params.id);
+
+        const name = findUser.orgName;
+        const org = await organisationModel.findOne({ name });
+
+        console.log(org);
+
+        org.user.pull(new mongoose.Types.ObjectId(findUser._id));
+        org.save();
+
         await userModel.findByIdAndDelete(req.params.id);
-        // verifiedByAdminFinally(getUser, generateToken).then((result) => {
-        //   console.log("sent: ", result);
-        // });
+        console.log("new Org: ", org);
         res.status(201).json({ message: "user has been deleted" });
       }
     } else {
