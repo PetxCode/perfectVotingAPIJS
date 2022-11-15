@@ -4,11 +4,13 @@ const {
   createVote,
   readVote,
   readYourVoters,
+  readPresidencyVote,
 } = require("../../controller/voters/presidentVoters");
 
 router.route("/:id/:voterID/create").post(createVote);
 // router.route("/:id/:voterID").delete(deleteVote);
 router.route("/view").get(readVote);
+router.route("/president/view").get(readPresidencyVote);
 
 router.route("/:id/view").get(readYourVoters);
 

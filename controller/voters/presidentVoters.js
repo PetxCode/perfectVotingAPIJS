@@ -11,6 +11,15 @@ const votersModel = require("../../model/votersModel");
 const candidateModel = require("../../model/candidateModel");
 const presyModel = require("../../votes/president/presyModel");
 
+const readPresidencyVote = async (req, res) => {
+  try {
+    const read = await presyModel.find();
+    return res.json({ message: "Reading all Voters", data: read });
+  } catch (error) {
+    return res.json({ message: error });
+  }
+};
+
 const readVote = async (req, res) => {
   try {
     const read = await votersModel.find();
@@ -83,6 +92,7 @@ module.exports = {
   readVote,
   readYourVoters,
   createVote,
+  readPresidencyVote,
 };
 
 // export const deleteVote = async (
