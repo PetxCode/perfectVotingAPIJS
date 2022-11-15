@@ -214,64 +214,46 @@ const VerifiedUserFinally = async (req, res) => {
   }
 };
 
-// const VerifiedUserFinally = async (req, res) => {
-//   try {
-//     const generateToken = crypto.randomBytes(2).toString("hex");
-//     const getUser = await userModel.findById(req.params.id);
-
-//     if (getUser) {
-//       await userModel.findByIdAndUpdate(
-//         req.params.id,
-//         {
-//           token: "",
-//           verified: true,
-//         },
-//         { new: true }
-//       );
-
-//       verifiedByAdminFinally(getUser).then((result) => {
-//         console.log("sent: ", result);
-//       });
-
-//       res.status(201).json({ message: "Sent..." });
-//     } else {
-//       return res.status(404).json({
-//         message: "user doesn't exist",
-//       });
-//     }
-//   } catch (err) {
-//     return;
-//   }
-// };
-
 const signinUser = async (req, res) => {
   try {
     const { email, voteCode, password } = req.body;
 
     const user = await userModel.findOne({ email });
 
-    if (user?.verified && user.token === "" && user.voteCode === voteCode) {
-      const pass = await bcrypt.compare(password, user.password);
-      if (pass) {
-        const getToken = jwt.sign(
-          {
-            email: user.email,
-            _id: user._id,
-            fullName: user.fullName,
-            superAdmin: user.superAdmin,
-          },
-          "voteApp"
-        );
+    if (user) {
+      if (user?.verified && user.token === "") {
+        if (user.voteCode === voteCode) {
+          const pass = await bcrypt.compare(password, user.password);
+          if (pass) {
+            const getToken = jwt.sign(
+              {
+                email: user.email,
+                _id: user._id,
+                fullName: user.fullName,
+                superAdmin: user.superAdmin,
+              },
+              "voteApp"
+            );
 
-        const { ...info } = user._doc;
+            const { ...info } = user._doc;
 
-        res.status(200).json({
-          message: `welcome back ${user.fullName}`,
-          data: { getToken, ...info },
-        });
+            res.status(200).json({
+              message: `welcome back ${user.fullName}`,
+              data: { getToken, ...info },
+            });
+          } else {
+            return res.status(404).json({
+              message: "error: password is incorrect",
+            });
+          }
+        } else {
+          return res.status(404).json({
+            message: "error: Your voter's code sin't correct",
+          });
+        }
       } else {
         return res.status(404).json({
-          message: "error: password is incorrect",
+          message: "error: no user hasn't been verified",
         });
       }
     } else {
