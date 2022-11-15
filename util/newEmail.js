@@ -302,6 +302,7 @@ module.exports = {
   verifiedByAdminFinally,
   verifiedUser,
   verifiedUser2,
+  verifiedUserFromAdmin1,
 };
 
 // `  <container>
