@@ -11,6 +11,15 @@ const votersModel = require("../../model/votersModel");
 const candidateModel = require("../../model/candidateModel");
 const presyModel = require("../../votes/president/secretaryVoteModel");
 
+const readPresidencyVote = async (req, res) => {
+  try {
+    const read = await presyModel.find();
+    return res.json({ message: "Reading all Voters", data: read });
+  } catch (error) {
+    return res.json({ message: error });
+  }
+};
+
 const readVote = async (req, res) => {
   try {
     const read = await votersModel.find();
@@ -71,23 +80,5 @@ module.exports = {
   readVote,
   readYourVoters,
   createVote,
+  readPresidencyVote,
 };
-
-// export const deleteVote = async (
-//   req,
-//   res: Response
-// ): Promise<Response> => {
-//   try {
-//     const getUser = await userModel.findById(req.params.id);
-//     const voter = await votersModel.findByIdAndRemove(req.params.votersID);
-
-//     getUser?.voter?.pull!(new mongoose.Types.ObjectId(voter!._id));
-//     getUser?.save();
-//     console.log(getUser?.voter);
-//     console.log(voter);
-
-//     return res.status(201).json({ message: "voter deleted" });
-//   } catch (err) {
-//     return res.json({ message: `error message: ${err}` });
-//   }
-// };

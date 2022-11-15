@@ -67,10 +67,20 @@ const createVote = async (req, res) => {
   }
 };
 
+const readPresidencyVote = async (req, res) => {
+  try {
+    const read = await presyModel.find();
+    return res.json({ message: "Reading all Voters", data: read });
+  } catch (error) {
+    return res.json({ message: error });
+  }
+};
+
 module.exports = {
   readVote,
   readYourVoters,
   createVote,
+  readPresidencyVote,
 };
 
 // export const deleteVote = async (

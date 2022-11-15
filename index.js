@@ -27,7 +27,7 @@ const app = express();
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: { origin: "*", methods: ["GET", "POST"] },
 });
 
 const url = "mongodb://localhost/votersDB";
@@ -43,7 +43,6 @@ mongoose.connect(urlOnline).then(() => {
   console.log("Database is now well connected!");
 });
 
-app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -73,8 +72,85 @@ app.use("/api/legalVote", legalVote);
 
 const db = mongoose.connection;
 
+io.on("connection", (socket) => {
+  console.log(`User connected ${socket.id}`);
+
+  // We can write our socket event listeners in here...
+});
+
 db.on("open", () => {
-  const observer = db.collection("voter").watch();
+  const observer = db.collection("candidates").watch();
+
+  observer.on("change", (change) => {
+    console.log(change);
+    if (change.operationType === "insert") {
+      io.emit("candidate");
+    }
+  });
+});
+
+db.on("open", () => {
+  const observer = db.collection("legalVotes").watch();
+
+  observer.on("change", (change) => {
+    if (change.operationType === "insert") {
+      io.emit("legal");
+    }
+  });
+});
+
+db.on("open", () => {
+  const observer = db.collection("pross").watch();
+
+  observer.on("change", (change) => {
+    if (change.operationType === "insert") {
+      io.emit("pro");
+    }
+  });
+});
+
+db.on("open", () => {
+  const observer = db.collection("secretaryVotes").watch();
+
+  observer.on("change", (change) => {
+    if (change.operationType === "insert") {
+      io.emit("secretary");
+    }
+  });
+});
+
+db.on("open", () => {
+  const observer = db.collection("socialSecs").watch();
+
+  observer.on("change", (change) => {
+    if (change.operationType === "insert") {
+      io.emit("social");
+    }
+  });
+});
+
+db.on("open", () => {
+  const observer = db.collection("vicePresys").watch();
+
+  observer.on("change", (change) => {
+    if (change.operationType === "insert") {
+      io.emit("vicepresident");
+    }
+  });
+});
+
+db.on("open", () => {
+  const observer = db.collection("presys").watch();
+
+  observer.on("change", (change) => {
+    if (change.operationType === "insert") {
+      io.emit("president");
+    }
+  });
+});
+
+db.on("open", () => {
+  const observer = db.collection("voters").watch();
 
   observer.on("change", (change) => {
     if (change.operationType === "insert") {

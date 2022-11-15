@@ -1,11 +1,20 @@
 const userModel = require("../model/userModel");
-const { Request, Response } = require("express");
 const mongoose = require("mongoose");
 const { acceptance } = require("../util/email");
-
 const PresidentModel = require("../model/PresidentModel");
-
 const candidateModel = require("../model/candidateModel");
+
+const testPro = async (req, res) => {
+  try {
+    const read = await candidateModel.create({
+      fullName: "Starttt",
+    });
+
+    return res.json({ message: "Reading all President", data: read });
+  } catch (error) {
+    return res.json({ message: error });
+  }
+};
 
 const readPresident = async (req, res) => {
   try {
@@ -109,4 +118,5 @@ module.exports = {
   readPresidentFromUsers,
   createPresident,
   readCandidate,
+  testPro,
 };

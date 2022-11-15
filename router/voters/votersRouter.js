@@ -8,7 +8,6 @@ const {
 } = require("../../controller/voters/presidentVoters");
 
 router.route("/:id/:voterID/create").post(createVote);
-// router.route("/:id/:voterID").delete(deleteVote);
 router.route("/view").get(readVote);
 router.route("/president/view").get(readPresidencyVote);
 

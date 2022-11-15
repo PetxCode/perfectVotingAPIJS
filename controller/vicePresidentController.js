@@ -6,6 +6,15 @@ const PresidentModel = require("../model/vicePresidentModel.t/vicePresident.js")
 
 const candidateModel = require("../model/candidateModel");
 
+const readPresidencyVote = async (req, res) => {
+  try {
+    const read = await presyModel.find();
+    return res.json({ message: "Reading all Voters", data: read });
+  } catch (error) {
+    return res.json({ message: error });
+  }
+};
+
 const readPresident = async (req, res) => {
   try {
     const read = await PresidentModel.find();

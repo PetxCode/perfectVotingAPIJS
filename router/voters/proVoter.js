@@ -5,11 +5,12 @@ const {
   createVote,
   readVote,
   readYourVoters,
+  readPresidencyVote,
   // deleteVote,
 } = require("../../controller/voters/proVoter");
 
 router.route("/:id/:voterID/create").post(createVote);
-// router.route("/:id/:voterID").delete(deleteVote);
+router.route("/pro/view").get(readPresidencyVote);
 router.route("/view").get(readVote);
 
 router.route("/:id/view").get(readYourVoters);

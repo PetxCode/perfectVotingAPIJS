@@ -3,13 +3,13 @@ const {
   createVote,
   readVote,
   readYourVoters,
-  // deleteVote,
+  readPresidencyVote,
 } = require("../../controller/voters/legalVote");
 
 const router = express.Router();
 
 router.route("/:id/:voterID/create").post(createVote);
-// router.route("/:id/:voterID").delete(deleteVote);
+router.route("/legal/view").get(readPresidencyVote);
 router.route("/view").get(readVote);
 
 router.route("/:id/view").get(readYourVoters);
