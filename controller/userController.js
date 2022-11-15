@@ -248,7 +248,7 @@ const signinUser = async (req, res) => {
           }
         } else {
           return res.status(404).json({
-            message: "error: Your voter's code sin't correct",
+            message: "error: Your voter's code isn't correct",
           });
         }
       } else {
