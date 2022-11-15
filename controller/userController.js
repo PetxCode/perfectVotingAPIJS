@@ -14,7 +14,11 @@ const {
   resetMyPassword,
 } = require("../util/email");
 
-const { verifiedUser2, verifiedUserFromAdmin1 } = require("../util/newEmail");
+const {
+  verifiedUser2,
+  verifiedUserFromAdmin1,
+  verifiedUserFromAdmin2,
+} = require("../util/newEmail");
 
 const createUser = async (req, res) => {
   try {
@@ -156,33 +160,82 @@ const VerifiedUser = async (req, res) => {
 
 const VerifiedUserFinally = async (req, res) => {
   try {
+    const { response } = req.body;
+
     const generateToken = crypto.randomBytes(2).toString("hex");
     const getUser = await userModel.findById(req.params.id);
 
-    if (getUser) {
-      await userModel.findByIdAndUpdate(
-        req.params.id,
-        {
-          token: "",
-          verified: true,
-        },
-        { new: true }
-      );
+    if (response === "Yes") {
+      if (getUser) {
+        await userModel.findByIdAndUpdate(
+          req.params.id,
+          {
+            token: "",
+            verified: true,
+            voteCode: generateToken,
+          },
+          { new: true }
+        );
 
-      verifiedByAdminFinally(getUser).then((result) => {
-        console.log("sent: ", result);
-      });
+        verifiedUserFromAdmin2(getUser).then((result) => {
+          console.log("sent: ", result);
+        });
 
-      res.status(201).json({ message: "Sent..." });
-    } else {
-      return res.status(404).json({
-        message: "user doesn't exist",
-      });
+        res.status(201).json({ message: "Sent..." });
+      } else {
+        return res.status(404).json({
+          message: "user doesn't exist",
+        });
+      }
     }
+
+    if (response === "No") {
+      if (getUser) {
+        await userModel.findByIdAndDelete(req.params.id);
+        // verifiedByAdminFinally(getUser, generateToken).then((result) => {
+        //   console.log("sent: ", result);
+        // });
+        res.status(201).json({ message: "user has been deleted" });
+      }
+    } else {
+      return res.json({ message: "You can't be accepted" });
+    }
+
+    res.end();
   } catch (err) {
     return;
   }
 };
+
+// const VerifiedUserFinally = async (req, res) => {
+//   try {
+//     const generateToken = crypto.randomBytes(2).toString("hex");
+//     const getUser = await userModel.findById(req.params.id);
+
+//     if (getUser) {
+//       await userModel.findByIdAndUpdate(
+//         req.params.id,
+//         {
+//           token: "",
+//           verified: true,
+//         },
+//         { new: true }
+//       );
+
+//       verifiedByAdminFinally(getUser).then((result) => {
+//         console.log("sent: ", result);
+//       });
+
+//       res.status(201).json({ message: "Sent..." });
+//     } else {
+//       return res.status(404).json({
+//         message: "user doesn't exist",
+//       });
+//     }
+//   } catch (err) {
+//     return;
+//   }
+// };
 
 const signinUser = async (req, res) => {
   try {
