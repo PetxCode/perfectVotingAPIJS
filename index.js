@@ -72,11 +72,11 @@ app.use("/api/legalVote", legalVote);
 
 const db = mongoose.connection;
 
-io.on("connection", (socket) => {
-  console.log(`User connected ${socket.id}`);
+// io.on("connection", (socket) => {
+//   console.log(`User connected ${socket.id}`);
 
-  // We can write our socket event listeners in here...
-});
+//   // We can write our socket event listeners in here...
+// });
 
 db.on("open", () => {
   const observer = db.collection("candidates").watch();
