@@ -159,7 +159,7 @@ db.on("open", () => {
   });
 });
 
-app.listen(process.env.PORT || port, () => {
+server.listen(process.env.PORT || port, () => {
   console.log("");
   console.log("server is now ready...!");
   console.log("");
