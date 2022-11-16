@@ -44,6 +44,7 @@ mongoose.connect(urlOnline).then(() => {
 });
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   return res.json({ message: "This is the Voting API" });
