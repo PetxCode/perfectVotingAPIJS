@@ -72,6 +72,7 @@ const createPresident = async (req, res) => {
       await candidateModel.create({
         fullName: user?.fullName,
         position: positioned?.position,
+        image: user?.image,
         user,
       });
 

@@ -54,6 +54,7 @@ const createPresident = async (req, res) => {
         fullName: user?.fullName,
         image: user?.image,
         position: "legal Director",
+        image: user?.image,
         user,
       });
 
