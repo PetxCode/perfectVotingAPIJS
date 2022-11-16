@@ -53,6 +53,7 @@ const createVote = async (req, res) => {
         _id: user?._id,
         fullName: user?.fullName,
         user,
+        voter: user,
       });
 
       getUser.voter?.push(new mongoose.Types.ObjectId(vote._id));
